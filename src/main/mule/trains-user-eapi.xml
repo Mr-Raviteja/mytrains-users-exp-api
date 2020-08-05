@@ -237,21 +237,7 @@ output application/json
         <flow-ref doc:name="Flow Reference" doc:id="b328d325-997f-4bd9-b9a5-e64b617c82bc" name="trains-user-exp-api-get-userBy-id" />
     </flow>
     <flow name="post:\users\user\(userId)\activation:application\json:trains-user-eapi-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
-            <ee:variables>
-                <ee:set-variable variableName="userId">attributes.uriParams.'userId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "activated successfully"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b46b60b4-7bce-4bde-adb7-35052c52cc0c" />
     </flow>
     <flow name="post:\users\user\(userId)\changePassword:application\json:trains-user-eapi-config">
         <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
