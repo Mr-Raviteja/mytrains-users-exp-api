@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<configuration doc:name="Configuration" doc:id="edcb3973-b01c-442c-ab64-c5fcb4eec408" defaultErrorHandler-ref="trains-user-exp-api-globalconfiguationsError_Handler" />
 	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler" doc:id="2be42713-bbed-45a6-9ae8-005188884854" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="14c082b1-e9c9-462a-bef8-34e5f37fd79c" >
-			<logger level="INFO" doc:name="Logger" doc:id="2f050087-edec-4dad-a957-1741b40e32df" />
+			<logger level="INFO" doc:name="Logger" doc:id="2f050087-edec-4dad-a957-1741b40e32df" message="#[payload]"/>
 		</on-error-propagate>
 	</error-handler>
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ca1f57af-ef5c-48ff-9c57-8dce604eabed" basePath="/api" >
