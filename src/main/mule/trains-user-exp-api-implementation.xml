@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:trains-user-okta-sapi="http://www.mulesoft.org/schema/mule/trains-user-okta-sapi" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:trains-customer-sapi="http://www.mulesoft.org/schema/mule/trains-customer-sapi" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/trains-customer-sapi http://www.mulesoft.org/schema/mule/trains-customer-sapi/current/mule-trains-customer-sapi.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/trains-user-okta-sapi http://www.mulesoft.org/schema/mule/trains-user-okta-sapi/current/mule-trains-user-okta-sapi.xsd">
+	<trains-customer-sapi:config name="Trains_customer_sapi_Config" doc:name="Trains-customer-sapi Config" doc:id="e202b9df-ce98-4318-ae84-ee53176941af" property_host="localhost" property_port="8082" property_protocol="HTTP" property_basePath="/api/" />
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="2a041645-b800-49ea-9d8f-6a81e36f230c" />
+	<trains-user-okta-sapi:config name="Trains_user_okta_sapi_Config" doc:name="Trains-user-okta-sapi Config" doc:id="68c5aa59-d420-48c5-9070-4816b91b81ae" property_host="localhost" property_port="8083" property_protocol="HTTP" property_basePath="/api/"/>
+	<flow name="trains-user-exp-api-update-userBy-id" doc:id="a87577aa-d439-4fee-be2c-109e4c9f7744" >
+		<trains-customer-sapi:update-user-by-user-id doc:name="Update user by user id" doc:id="36aa5a8a-3ab0-4a14-bb5c-4a4bf708638f" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e513975a-c7c0-422c-bed5-95770e9759b9" message="#[payload]"/>
+	</flow>
+	<flow name="trains-user-exp-api-delete-userBy-id" doc:id="e1e36027-cd28-4a6b-bb23-979528d1d838" >
+		<trains-customer-sapi:delete-user-by-user-id doc:name="Delete user by user id" doc:id="e6e1f7bc-a81d-41c5-b165-aa17faf82f72" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="9dcea012-ecf0-486e-920a-e9506498dc4f" message="#[payload]"/>
+	</flow>
+	<flow name="trains-user-exp-api-get-userBy-id" doc:id="214ae2e0-d25d-497d-90a2-1376bc0d0fbe" >
+		<trains-customer-sapi:get-user-by-user-id doc:name="Get user by user id" doc:id="97b50d90-684a-4c22-9bea-57e7825ca2d5" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="067b5c83-e73f-47f3-8d54-1b27f42e6acc" message="#[payload]"/>
+	</flow>
+	<flow name="trains-user-exp-api-create-user" doc:id="135786df-3e12-4aba-ba2e-5c442085cca4" >
+		<set-variable value="#[payload.phone]" doc:name="Set Variable" doc:id="d99c3f06-ae64-4c45-b4fb-ee041a24174f" variableName="phone"/>
+		<ee:transform doc:name="Transform Message" doc:id="fc7cef8e-5df4-494f-a65c-4cf138e29a02" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	firstName: payload.firstName,
+	lastName: payload.lastName,
+	email: payload.email,
+	password: payload.password
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="a729e8b3-df16-4d37-aa66-7ef2bdcaab55" message="#[payload]"/>
+		<trains-user-okta-sapi:add-user doc:name="Add user" doc:id="0d285500-ed97-413c-8adf-10eb5aa59537" config-ref="Trains_user_okta_sapi_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="980b558c-efda-47a5-aa2c-5a154eb70cc7" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="658d4575-7ffd-444e-8164-d6d74a154b6a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	userId: payload.id,
+	firstName: payload.profile.firstName,
+	lastName: payload.profile.lastName,
+	emailId: payload.profile.email,
+	phone: vars.phone
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<trains-customer-sapi:add-customer doc:name="Add Customer" doc:id="113aa6af-d826-4802-9442-0c951382c33a" config-ref="Trains_customer_sapi_Config" />
+		<logger level="INFO" doc:name="Logger" doc:id="99cbbabc-4f2b-41b9-89cf-53b0e7c7c14e" message="#[payload]" />
+	</flow>
+	<flow name="trains-user-exp-api-getAll-users" doc:id="8c6041a7-dbe6-497a-9a14-c406c4a1575d" >
+		<trains-customer-sapi:get-all-customer doc:name="Get All customer" doc:id="0696d1c5-e5cf-4dd8-8a01-06632c673de9" config-ref="Trains_customer_sapi_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e78fa9f7-edbb-4e3e-b637-9249f42567a5" message="#[payload]"/>
+	</flow>
+</mule>

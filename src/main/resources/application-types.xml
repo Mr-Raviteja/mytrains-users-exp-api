@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="userUI" format="json">
+      <types:shape format="weave" example="examples/userUI-1.json"><![CDATA[%dw 2.0
+
+type userUI = {|
+  firstName: String, 
+  lastName: String, 
+  email: String, 
+  phone: String, 
+  password: String
+|} {"example": "{\\\"firstName\\\":\\\"Ravi\\\",\\\"lastName\\\":\\\"Teja\\\",\\\"email\\\":\\\"ravitejaSunny@gmail.com\\\",\\\"phone\\\":\\\"07448772079\\\",\\\"password\\\":\\\"jsfhf@123\\\"}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="oktaUserResponse" format="json">
+      <types:shape format="weave" example="examples/oktaUserResponse.json"><![CDATA[%dw 2.0
+
+type oktaUserResponse = Array<{|  id: String,   status: String,   created: String,   activated: Null,   statusChanged: String,   lastLogin: String,   lastUpdated: String,   passwordChanged: String,   "type": {| id: String |},   profile: {|    firstName: String,     lastName: String,     mobilePhone: Null,     secondEmail: Null,     login: String,     email: String  |},   credentials: {|    password: {|  |},     emails: Array<{|      value: String,       status: String,       "type": String    |}>, 
+    recovery_question: {| question: String |}, 
+    provider: {|
+      "type": String, 
+      name: String
+    |}
+  |}, 
+  "_links": {| self: {| href: String |} |}
+|}> {"example": "[{\\\"id\\\":\\\"00ukg8k2piSyZYC724x6\\\",\\\"status\\\":\\\"ACTIVE\\\",\\\"created\\\":\\\"2020-07-13T15:38:38.000Z\\\",\\\"activated\\\":null,\\\"statusChanged\\\":\\\"2020-07-13T21:25:14.000Z\\\",\\\"lastLogin\\\":\\\"2020-08-03T09:50:19.000Z\\\",\\\"lastUpdated\\\":\\\"2020-07-13T21:25:14.000Z\\\",\\\"passwordChanged\\\":\\\"2020-07-13T21:25:14.000Z\\\",\\\"type\\\":{\\\"id\\\":\\\"otykg8k01uU8qdTeS4x6\\\"},\\\"profile\\\":{\\\"firstName\\\":\\\"Raviteja\\\",\\\"lastName\\\":\\\"Madishetty\\\",\\\"mobilePhone\\\":null,\\\"secondEmail\\\":null,\\\"login\\\":\\\"madishettyraviteja2011@gmail.com\\\",\\\"email\\\":\\\"madishettyraviteja2011@gmail.com\\\"},\\\"credentials\\\":{\\\"password\\\":{},\\\"emails\\\":[{\\\"value\\\":\\\"madishettyraviteja2011@gmail.com\\\",\\\"status\\\":\\\"VERIFIED\\\",\\\"type\\\":\\\"PRIMARY\\\"}],\\\"recovery_question\\\":{\\\"question\\\":\\\"What was the first computer game you played?\\\"},\\\"provider\\\":{\\\"type\\\":\\\"OKTA\\\",\\\"name\\\":\\\"OKTA\\\"}},\\\"_links\\\":{\\\"self\\\":{\\\"href\\\":\\\"https:\\/\\/dev-544411.okta.com\\/api\\/v1\\/users\\/00ukg8k2piSyZYC724x6\\\"}}},{\\\"id\\\":\\\"00um1dosfwmMplVz34x6\\\",\\\"status\\\":\\\"ACTIVE\\\",\\\"created\\\":\\\"2020-07-21T17:54:13.000Z\\\",\\\"activated\\\":\\\"2020-07-21T17:54:14.000Z\\\",\\\"statusChanged\\\":\\\"2020-07-21T17:54:14.000Z\\\",\\\"lastLogin\\\":null,\\\"lastUpdated\\\":\\\"2020-07-21T17:54:14.000Z\\\",\\\"passwordChanged\\\":\\\"2020-07-21T17:54:13.000Z\\\",\\\"type\\\":{\\\"id\\\":\\\"otykg8k01uU8qdTeS4x6\\\"},\\\"profile\\\":{\\\"firstName\\\":\\\"Isaac\\\",\\\"lastName\\\":\\\"Brock\\\",\\\"mobilePhone\\\":null,\\\"secondEmail\\\":null,\\\"login\\\":\\\"madishetty.sunny@gmail.com\\\",\\\"email\\\":\\\"madishetty.sunny@gmail.com\\\"},\\\"credentials\\\":{\\\"password\\\":{},\\\"emails\\\":[{\\\"value\\\":\\\"madishetty.sunny@gmail.com\\\",\\\"status\\\":\\\"VERIFIED\\\",\\\"type\\\":\\\"PRIMARY\\\"}],\\\"provider\\\":{\\\"type\\\":\\\"OKTA\\\",\\\"name\\\":\\\"OKTA\\\"}},\\\"_links\\\":{\\\"self\\\":{\\\"href\\\":\\\"https:\\/\\/dev-544411.okta.com\\/api\\/v1\\/users\\/00um1dosfwmMplVz34x6\\\"}}},{\\\"id\\\":\\\"00uo3vjxrILqUNFrt4x6\\\",\\\"status\\\":\\\"ACTIVE\\\",\\\"created\\\":\\\"2020-08-01T01:39:28.000Z\\\",\\\"activated\\\":\\\"2020-08-01T01:39:28.000Z\\\",\\\"statusChanged\\\":\\\"2020-08-01T01:39:28.000Z\\\",\\\"lastLogin\\\":null,\\\"lastUpdated\\\":\\\"2020-08-01T01:39:28.000Z\\\",\\\"passwordChanged\\\":\\\"2020-08-01T01:39:28.000Z\\\",\\\"type\\\":{\\\"id\\\":\\\"otykg8k01uU8qdTeS4x6\\\"},\\\"profile\\\":{\\\"firstName\\\":\\\"sunny\\\",\\\"lastName\\\":\\\"Brock\\\",\\\"mobilePhone\\\":null,\\\"secondEmail\\\":null,\\\"login\\\":\\\"sunny@gmail.com\\\",\\\"email\\\":\\\"sunny@gmail.com\\\"},\\\"credentials\\\":{\\\"password\\\":{},\\\"emails\\\":[{\\\"value\\\":\\\"sunny@gmail.com\\\",\\\"status\\\":\\\"VERIFIED\\\",\\\"type\\\":\\\"PRIMARY\\\"}],\\\"provider\\\":{\\\"type\\\":\\\"OKTA\\\",\\\"name\\\":\\\"OKTA\\\"}},\\\"_links\\\":{\\\"self\\\":{\\\"href\\\":\\\"https:\\/\\/dev-544411.okta.com\\/api\\/v1\\/users\\/00uo3vjxrILqUNFrt4x6\\\"}}}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#d99c3f06-ae64-4c45-b4fb-ee041a24174f">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="userUI"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#658d4575-7ffd-444e-8164-d6d74a154b6a">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="oktaUserResponse"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#fc7cef8e-5df4-494f-a65c-4cf138e29a02">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="userUI"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
