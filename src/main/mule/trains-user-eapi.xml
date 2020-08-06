@@ -130,55 +130,16 @@ output application/json
         <flow-ref doc:name="Flow Reference" doc:id="759440aa-e03b-452d-b670-fe02e3850d1f" name="trains-user-exp-api-create-user" />
     </flow>
     <flow name="post:\login:application\json:trains-user-eapi-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "login successfull"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="0e2e859d-fa14-4c2a-bbfc-608305f73292" name="trains-user-exp-api-authenticate"/>
     </flow>
     <flow name="put:\users\user\(userId)\subscriptions\subscriber\(subscriberId):application\json:trains-user-eapi-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
-            <ee:variables>
-                <ee:set-variable variableName="userId">attributes.uriParams.'userId'</ee:set-variable>
-                <ee:set-variable variableName="subscriberId">attributes.uriParams.'subscriberId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "updated sucessfully"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="a97903f6-b72e-4d97-b310-e436e8ce0c06" name="trains-user-exp-api-update-subscription"/>
     </flow>
     <flow name="patch:\users\user\(userId):application\json:trains-user-eapi-config">
         <flow-ref doc:name="Flow Reference" doc:id="242ba2a8-4e4c-4f39-880c-b386bc05f857" name="trains-user-exp-api-update-userBy-id" />
     </flow>
     <flow name="delete:\users\user\(userId)\subscriptions\subscriber\(subscriberId):application\json:trains-user-eapi-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
-            <ee:variables>
-                <ee:set-variable variableName="userId">attributes.uriParams.'userId'</ee:set-variable>
-                <ee:set-variable variableName="subscriberId">attributes.uriParams.'subscriberId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "unsubscription is sucessfull"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="ce9fc341-8a83-4aaf-9e12-978194259132" name="trains-user-exp-api-deleteSubscrpition"/>
     </flow>
     <flow name="get:\users\user\(userId)\subscriptions\subscriber\(subscriberId):trains-user-eapi-config">
         <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
@@ -205,33 +166,7 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="get:\users\user\(userId)\subscriptions:trains-user-eapi-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    subscription: "1254",
-    userId: "12",
-    source: "cambridge",
-    destination: "Liverpool",
-    sourceTime: "2016-02-28T12:41:41.090Z",
-    destinationTime: "2016-02-28T16:41:41.090Z",
-    remainderTime: "00:30:00"
-  }, 
-  {
-    subscription: "1254",
-    userId: "12",
-    source: "cambridge",
-    destination: "Liverpool",
-    sourceTime: "2016-02-28T12:41:41.090Z",
-    destinationTime: "2016-02-28T16:41:41.090Z",
-    remainderTime: "00:30:00"
-  }
-]]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="0d88fafe-e67b-4afd-b5af-c6555252a8b4" name="trains-user-exp-api-getSubscritions-by-userId"/>
     </flow>
     <flow name="get:\users\user\(userId):trains-user-eapi-config">
         <flow-ref doc:name="Flow Reference" doc:id="b328d325-997f-4bd9-b9a5-e64b617c82bc" name="trains-user-exp-api-get-userBy-id" />
@@ -240,21 +175,7 @@ output application/json
 		<logger level="INFO" doc:name="Logger" doc:id="b46b60b4-7bce-4bde-adb7-35052c52cc0c" />
     </flow>
     <flow name="post:\users\user\(userId)\changePassword:application\json:trains-user-eapi-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
-            <ee:variables>
-                <ee:set-variable variableName="userId">attributes.uriParams.'userId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "password changed successfully"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="96cb681f-d8cc-42e8-989d-dcabce766f37" name="trains-user-exp-api-changePassword"/>
     </flow>
     <flow name="post:\users\user\(userId)\deactivation:application\json:trains-user-eapi-config">
         <flow-ref doc:name="Flow Reference" doc:id="5e35a4f4-c889-4698-997f-11c30147bc86" name="trains-user-exp-api-delete-userBy-id" />
@@ -277,20 +198,6 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\users\user\(userId)\subscriptions\subscribe:application\json:trains-user-eapi-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
-            <ee:variables>
-                <ee:set-variable variableName="userId">attributes.uriParams.'userId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "successfully subscribed"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="8984d9f9-5f5f-462d-8357-3cb8323d51f8" name="trains-user-exp-api-createSubscription"/>
     </flow>
 </mule>

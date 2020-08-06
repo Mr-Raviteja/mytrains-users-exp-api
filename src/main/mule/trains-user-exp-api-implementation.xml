@@ -14,6 +14,11 @@ http://www.mulesoft.org/schema/mule/trains-user-okta-sapi http://www.mulesoft.or
 	<flow name="trains-user-exp-api-update-userBy-id" doc:id="a87577aa-d439-4fee-be2c-109e4c9f7744" >
 		<trains-customer-sapi:update-user-by-user-id doc:name="Update user by user id" doc:id="36aa5a8a-3ab0-4a14-bb5c-4a4bf708638f" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]"/>
 		<logger level="INFO" doc:name="Logger" doc:id="e513975a-c7c0-422c-bed5-95770e9759b9" message="#[payload]"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="72e1c66e-dd68-41bb-945f-cbbc183a3584" >
+				<logger level="INFO" doc:name="Logger" doc:id="d065b65b-483a-41c4-875a-849a84b3eb14" message="#[error.errorType]"/>
+			</on-error-propagate>
+		</error-handler>
 	</flow>
 	<flow name="trains-user-exp-api-delete-userBy-id" doc:id="e1e36027-cd28-4a6b-bb23-979528d1d838" >
 		<trains-customer-sapi:delete-user-by-user-id doc:name="Delete user by user id" doc:id="e6e1f7bc-a81d-41c5-b165-aa17faf82f72" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]"/>
