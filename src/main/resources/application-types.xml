@@ -48,7 +48,7 @@ type oktaUserResponse = Array<{|  id: String,   status: String,   created: Strin
       </types:input-event>
     </types:processor-declaration>
   </types:enrichment>
-  <types:enrichment select="#fc7cef8e-5df4-494f-a65c-4cf138e29a02">
+  <types:enrichment select="#3349cc6d-c1e3-49c2-a225-b847e6101211">
     <types:processor-declaration>
       <types:input-event>
         <types:message>

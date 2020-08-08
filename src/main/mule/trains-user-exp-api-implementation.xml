@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:trains-user-okta-sapi="http://www.mulesoft.org/schema/mule/trains-user-okta-sapi" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:trains-customer-sapi="http://www.mulesoft.org/schema/mule/trains-customer-sapi" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:trains-user-okta-sapi="http://www.mulesoft.org/schema/mule/trains-user-okta-sapi"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:trains-customer-sapi="http://www.mulesoft.org/schema/mule/trains-customer-sapi" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/trains-customer-sapi http://www.mulesoft.org/schema/mule/trains-customer-sapi/current/mule-trains-customer-sapi.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
-http://www.mulesoft.org/schema/mule/trains-user-okta-sapi http://www.mulesoft.org/schema/mule/trains-user-okta-sapi/current/mule-trains-user-okta-sapi.xsd">
-	<trains-customer-sapi:config name="Trains_customer_sapi_Config" doc:name="Trains-customer-sapi Config" doc:id="e202b9df-ce98-4318-ae84-ee53176941af" property_host="localhost" property_port="8082" property_protocol="HTTP" property_basePath="/api/" />
+http://www.mulesoft.org/schema/mule/trains-user-okta-sapi http://www.mulesoft.org/schema/mule/trains-user-okta-sapi/current/mule-trains-user-okta-sapi.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<trains-customer-sapi:config name="Trains_customer_sapi_Config" doc:name="Trains-customer-sapi Config" doc:id="e202b9df-ce98-4318-ae84-ee53176941af" property_host="localhost" property_port="8082" property_protocol="HTTP" property_basePath="/api/" property_responseTimeout="50000"/>
 	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="2a041645-b800-49ea-9d8f-6a81e36f230c" />
-	<trains-user-okta-sapi:config name="Trains_user_okta_sapi_Config" doc:name="Trains-user-okta-sapi Config" doc:id="68c5aa59-d420-48c5-9070-4816b91b81ae" property_host="localhost" property_port="8083" property_protocol="HTTP" property_basePath="/api/"/>
+	<trains-user-okta-sapi:config name="Trains_user_okta_sapi_Config" doc:name="Trains-user-okta-sapi Config" doc:id="68c5aa59-d420-48c5-9070-4816b91b81ae" property_host="localhost" property_port="8083" property_protocol="HTTP" property_basePath="/api/" property_responseTimeout="50000"/>
 	<flow name="trains-user-exp-api-update-userBy-id" doc:id="a87577aa-d439-4fee-be2c-109e4c9f7744" >
 		<trains-customer-sapi:update-user-by-user-id doc:name="Update user by user id" doc:id="36aa5a8a-3ab0-4a14-bb5c-4a4bf708638f" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]"/>
 		<logger level="INFO" doc:name="Logger" doc:id="e513975a-c7c0-422c-bed5-95770e9759b9" message="#[payload]"/>
@@ -29,7 +30,7 @@ http://www.mulesoft.org/schema/mule/trains-user-okta-sapi http://www.mulesoft.or
 		<logger level="INFO" doc:name="Logger" doc:id="e583647d-e73d-4973-b170-8a32ceda2cfc" message="#[payload]"/>
 	</flow>
 	<flow name="trains-user-exp-api-authenticate" doc:id="c2fc810a-ed9b-4d56-b160-f46a2f57173e" >
-		<trains-user-okta-sapi:create-authenticate doc:name="Create authenticate" doc:id="be22c840-68b0-4b99-9086-46c7e4d30dbd" config-ref="Trains_user_okta_sapi_Config"/>
+		<trains-user-okta-sapi:create-authenticate doc:name="Authenticate User" doc:id="be22c840-68b0-4b99-9086-46c7e4d30dbd" config-ref="Trains_user_okta_sapi_Config"/>
 		<logger level="INFO" doc:name="Logger" doc:id="f7754c9d-580b-4b08-83f7-f96503a0a3ad" message="#[payload]"/>
 	</flow>
 	<flow name="trains-user-exp-api-forgotPassword" doc:id="e0bc5939-4a40-4880-9d3d-002296aca960" >
@@ -38,11 +39,11 @@ http://www.mulesoft.org/schema/mule/trains-user-okta-sapi http://www.mulesoft.or
 	</flow>
 	<flow name="trains-user-exp-api-get-userBy-id" doc:id="214ae2e0-d25d-497d-90a2-1376bc0d0fbe" >
 		<trains-customer-sapi:get-user-by-user-id doc:name="Get user by user id" doc:id="97b50d90-684a-4c22-9bea-57e7825ca2d5" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]"/>
-		<logger level="INFO" doc:name="Logger" doc:id="067b5c83-e73f-47f3-8d54-1b27f42e6acc" message="#[payload]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="965c334e-0f7f-4373-a56a-e600982c6f97" />
 	</flow>
 	<flow name="trains-user-exp-api-create-user" doc:id="135786df-3e12-4aba-ba2e-5c442085cca4" >
 		<set-variable value="#[payload.phone]" doc:name="Set Variable" doc:id="d99c3f06-ae64-4c45-b4fb-ee041a24174f" variableName="phone"/>
-		<ee:transform doc:name="Transform Message" doc:id="fc7cef8e-5df4-494f-a65c-4cf138e29a02" >
+		<ee:transform doc:name="Transform Message" doc:id="3349cc6d-c1e3-49c2-a225-b847e6101211" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -50,14 +51,12 @@ output application/json
 {
 	firstName: payload.firstName,
 	lastName: payload.lastName,
-	email: payload.email,
-	password: payload.password
-	
+	password: payload.password,
+	email: payload.email
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="a729e8b3-df16-4d37-aa66-7ef2bdcaab55" message="#[payload]"/>
-		<trains-user-okta-sapi:add-user doc:name="Okta Add user" doc:id="0d285500-ed97-413c-8adf-10eb5aa59537" config-ref="Trains_user_okta_sapi_Config"/>
+		<trains-user-okta-sapi:add-user doc:name="Okta Add user" doc:id="0d285500-ed97-413c-8adf-10eb5aa59537" config-ref="Trains_user_okta_sapi_Config" />
 		<logger level="INFO" doc:name="Logger" doc:id="980b558c-efda-47a5-aa2c-5a154eb70cc7" message="#[payload]"/>
 		<ee:transform doc:name="Transform Message" doc:id="658d4575-7ffd-444e-8164-d6d74a154b6a" >
 			<ee:message >
@@ -85,7 +84,7 @@ output application/json
 		<logger level="INFO" doc:name="Logger" doc:id="102fe84c-6ee7-407f-ab71-0da0d66452e9" message="#[payload]"/>
 	</flow>
 	<flow name="trains-user-exp-api-get-subscriptionId-by-userId" doc:id="cbfac342-91e4-4854-96f2-17f6fa6b995f" >
-		<trains-customer-sapi:get-subscriber-by-user-id-subscription-id doc:name="Get subscriber by user id subscription id" doc:id="fbc510a6-b7bc-42c7-a59a-2e796fe5f2e7" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]" subscription-id="#[message.attributes.uriParams.subscriberId]"/>
+		<trains-customer-sapi:get-subscriber-by-user-id-subscription-id doc:name="Get subscription id by user id" doc:id="fbc510a6-b7bc-42c7-a59a-2e796fe5f2e7" config-ref="Trains_customer_sapi_Config" user-id="#[message.attributes.uriParams.userId]" subscription-id="#[message.attributes.uriParams.subscriberId]"/>
 		<logger level="INFO" doc:name="Logger" doc:id="c6af35eb-2f43-4fdb-9140-aaadbcf2692c" message="#[payload]"/>
 	</flow>
 	<flow name="trains-user-exp-api-update-subscription" doc:id="56831fe3-76f6-40ef-80ae-7dfce8171d9b" >

@@ -142,28 +142,7 @@ output application/json
 		<flow-ref doc:name="Flow Reference" doc:id="ce9fc341-8a83-4aaf-9e12-978194259132" name="trains-user-exp-api-deleteSubscrpition"/>
     </flow>
     <flow name="get:\users\user\(userId)\subscriptions\subscriber\(subscriberId):trains-user-eapi-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
-            <ee:variables>
-                <ee:set-variable variableName="userId">attributes.uriParams.'userId'</ee:set-variable>
-                <ee:set-variable variableName="subscriberId">attributes.uriParams.'subscriberId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  subscription: "1254",
-  userId: "12",
-  source: "cambridge",
-  destination: "Liverpool",
-  sourceTime: "2016-02-28T12:41:41.090Z",
-  destinationTime: "2016-02-28T16:41:41.090Z",
-  remainderTime: "00:30:00"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="57cd297d-2bfb-4ea6-afd1-dd005ab768cf" name="trains-user-exp-api-get-subscriptionId-by-userId"/>
     </flow>
     <flow name="get:\users\user\(userId)\subscriptions:trains-user-eapi-config">
 		<flow-ref doc:name="Flow Reference" doc:id="0d88fafe-e67b-4afd-b5af-c6555252a8b4" name="trains-user-exp-api-getSubscritions-by-userId"/>
