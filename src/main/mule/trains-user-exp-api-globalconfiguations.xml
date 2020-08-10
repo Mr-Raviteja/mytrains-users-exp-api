@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
 	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<configuration-properties doc:name="Configuration properties" doc:id="e4ce7f44-6fd3-427e-bda4-77dd903de053" file="trains.users.exp.api.dev.yaml" />
 	<configuration doc:name="Configuration" doc:id="edcb3973-b01c-442c-ab64-c5fcb4eec408" defaultErrorHandler-ref="trains-user-exp-api-globalconfiguationsError_Handler" />
 	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="99c6099b-24e2-4b5d-8b9c-73ac69f15875" applicationName="mytrains-users-eapi" environment="dev" applicationVersion="1.0.0-SNAPSHOT"/>
-	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler" doc:id="2be42713-bbed-45a6-9ae8-005188884854" >
-		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="14c082b1-e9c9-462a-bef8-34e5f37fd79c" >
-			<ee:transform doc:name="Transform Message" doc:id="b0b21be1-b7b0-4c5a-8cce-504fd7f73e62" >
+	
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler1" doc:id="43683671-fc0e-4927-bce9-38b9e5283dd0" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7cdc7064-7d5e-4135-9ebe-414ce2f5b4be" type="TRAINS-CUSTOMER-SAPI:BAD_REQUEST">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="393615d0-4842-4321-a0ff-e32d820a1550" >
 				<ee:message >
 					<ee:set-payload ><![CDATA[%dw 2.0
 output application/java
@@ -23,12 +26,490 @@ output application/java
 }]]></ee:set-payload>
 				</ee:message>
 			</ee:transform>
-			<json-logger:logger doc:name="Logger" doc:id="58170c79-9be0-4def-ac14-f1bf1ebc70f6" message="#[payload]" config-ref="JSON_Logger_Config"/>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="3312032a-9392-4f69-8c33-d158462a7fd5" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler2" doc:id="8fa90a0c-8831-4a67-8e72-934f164b6a13" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="04ac06c4-a2a7-4cc0-ac7b-442180c69a17" type="TRAINS-CUSTOMER-SAPI:CONNECTIVITY">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="4b27fce5-595a-41c1-a787-6a5e110fbc52" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="e2570b06-6b1d-44cb-9eee-27bad6f2c158" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler3" doc:id="1ea0f651-3a66-43bd-a52d-fec13afb5979" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3ec768b0-6c50-46a0-aeb4-8aeba3f24cc4" type="TRAINS-CUSTOMER-SAPI:FORBIDDEN">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="9d08bf74-b458-42f3-87d9-8a9c70eb79db" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="7ae1a8d6-20fa-4328-9683-0d3a84c0c0cf" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler4" doc:id="2232744a-b1bc-4b1a-a8f9-9ab27589ec87" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e2981e03-5658-4de3-99b4-03dd6b6a1f26" type="TRAINS-CUSTOMER-SAPI:INTERNAL_SERVER_ERROR">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="b35eb409-1732-4eb4-b737-11e2cb25450c" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="bb113333-9e7e-4f91-bc50-1ae53e18c3d5" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler5" doc:id="29d742e6-8656-4303-b9e4-04f735186b7a" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c3dc664c-11a6-4a63-8c69-05adac7b7408" type="TRAINS-CUSTOMER-SAPI:METHOD_NOT_ALLOWED">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="563778fc-e889-4611-8a3b-4d05c318ad6f" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="86d25f10-c7af-4701-8f47-3e19c0ce3ff9" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler6" doc:id="c6f179a6-097a-4056-a4de-fed1bf8d777c" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e8139600-18d8-4584-bb6b-535764b08196" type="TRAINS-CUSTOMER-SAPI:NOT_ACCEPTABLE">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="d0ef4f8b-9509-44e0-8afa-b417162ae321" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="124b3c47-fa1b-492e-910b-3f983235e597" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler7" doc:id="4256bf45-57f9-4c8e-9d08-9b77bfa3733e" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f26aa2b5-bc3b-42cf-ab09-3d422f2ed2cd" type="TRAINS-CUSTOMER-SAPI:NOT_FOUND">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="e4f5f5eb-94a3-43d8-9dfe-d0e22b8c456f" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="86187d9f-3eab-4dd2-964b-95e7c8b19c44" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler8" doc:id="b76259f5-c580-4832-8d1d-0372538bfe01" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c89a0fac-d831-4f69-a143-4f436603321e" type="TRAINS-CUSTOMER-SAPI:PARSING">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="86f6d575-5f52-4c8a-b108-10191f37cdd1" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="0825b910-9c0f-4130-9c8b-de8d03899a1d" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler9" doc:id="fbb7005c-a18e-4830-afd8-6d4e5b0a468e" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a2edd328-b41b-41c5-b696-6b528619b57c" type="TRAINS-CUSTOMER-SAPI:RETRY_EXHAUSTED">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="bdd8a8b4-b847-4b31-b6f1-9b4dbadeb627" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="539669b4-9f84-4daa-93c2-3a3e0cc6ed0f" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler10" doc:id="267bbd6b-2e11-4d78-86cc-5c035449b956" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="166ab66c-31f2-4d79-a4aa-ea187164f249" type="TRAINS-CUSTOMER-SAPI:SECURITY">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="236e97bb-9f79-4317-9855-cee60098f8c8" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="427438e8-23df-491b-a445-47fcbf688661" config-ref="JSON_Logger_Config" message="#[payload]" />
 		</on-error-propagate>
 	</error-handler>
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ca1f57af-ef5c-48ff-9c57-8dce604eabed" basePath="/api" >
 		<http:request-connection host="localhost" port="8081" />
 	</http:request-config>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler11" doc:id="ffd63008-07a7-41d5-9867-8f4da25b1502" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="579fdc30-3e98-498b-b1d5-92df1ab18c5b" type="TRAINS-CUSTOMER-SAPI:SERVICE_UNAVAILABLE">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="ebb378ee-d762-4692-8e12-7c34b9a41c94" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="6f074b68-f4b5-4215-af3b-cf9988ebc3f9" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler12" doc:id="d4211c89-fe22-4c85-8cc0-91dcae2bd941" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="74f0fc8b-4d87-419a-8517-e483fa78a916" type="TRAINS-CUSTOMER-SAPI:TIMEOUT" >
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="5e740ee3-085a-40c5-b2d7-be771e5e171d" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="864f0c28-3246-4dd8-8894-b815dfa37cd5" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler13" doc:id="1e4fa898-d2b8-4a70-9b50-e0577340cbdc" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="892c1c6c-6c1c-4bcb-80d0-85626a4c7f7e" type="TRAINS-CUSTOMER-SAPI:TOO_MANY_REQUESTS">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="b9a4424d-3ed4-4505-91b7-fe6ce84eee0a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="562321d2-f494-43c6-a765-7331aa3290a7" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler14" doc:id="d0126bc4-a5b9-4fc5-b44d-88edee71421b" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9bf9d123-9f1b-4348-aa3a-3e218a16d55d" type="TRAINS-CUSTOMER-SAPI:UNAUTHORIZED" >
+			<ee:transform doc:name="Transform Message" doc:id="43cda224-694b-4996-bc5f-28e9369e1341" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler16" doc:id="5aadebc4-c1e0-4834-a636-8ab67378dc86" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="cdba311e-e161-466c-9223-a7bf5febb49b" type="TRAINS-CUSTOMER-SAPI:UNSUPPORTED_MEDIA_TYPE">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="0b179702-0866-4530-8c23-a36cdf7f7b78" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="012bc390-ce7f-47fd-b94a-8eb1e0470dde" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler17" doc:id="57a168da-fd4e-4d8c-be6e-9806d933a96a" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d9a176c3-e82a-4187-b7e7-ca159b25a151" type="TRAINS-USER-OKTA-SAPI:BAD_REQUEST" >
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="d24d03ad-779a-4d7c-84d2-650f06c88e1a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="571bf252-eb12-4649-b9c1-8546eefa474a" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler18" doc:id="3c242a8d-88a4-46fb-8b28-88d9ef395e46" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b276865e-dccd-44bf-8b21-97533fead736" type="TRAINS-USER-OKTA-SAPI:CONNECTIVITY">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="cc92698d-e0b9-4b55-aea5-6d13f7c10bb5" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="a9ffcab3-8324-4241-a51d-52b2833f08cc" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler15" doc:id="c8fd408d-0d57-442b-a3ac-a1ce736875ae" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b0e1558b-b2cb-4682-96e3-9c11abd7056d" type="TRAINS-USER-OKTA-SAPI:FORBIDDEN">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="c447729d-4c89-4782-9e16-2d5fb34f7fc0" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="8ad86f3e-c3c4-4703-b7b9-d4aea5cc3d48" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler20" doc:id="ebcd9b42-5350-4fa0-8b65-77a9f4ad12e4" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="51bc1417-6e55-4dd4-b780-9a6772c7f619" type="TRAINS-USER-OKTA-SAPI:INTERNAL_SERVER_ERROR">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="3fc4966a-d20f-4f32-b86b-4f6edb276dc5" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="63153ce8-4dbe-4cb4-818b-f331e4fbcd64" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler22" doc:id="429bb680-86e2-4e00-b494-cc72870a5aa1" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="150239c7-c239-4c9f-b11f-db31e937fb5a" type="TRAINS-USER-OKTA-SAPI:METHOD_NOT_ALLOWED">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="e640ec75-e0d3-46d4-a8c6-68eac5c46494" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="c1798811-4407-4d36-8153-ebe954b2e461" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler26" doc:id="57a18a60-7eb6-473f-b2d9-375b5c58edd8" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e2feb0e1-08c8-4ddd-b20d-5c98d69421c0" type="TRAINS-USER-OKTA-SAPI:NOT_ACCEPTABLE">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="832bbfd2-7c9c-43ca-a0a4-2c10aed7cc0e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="bcc84a25-ca71-45b7-9c96-11a02e4e5117" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler27" doc:id="a7c1b735-5153-4dd0-866b-a7c29d4f7b98" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ae9ddd5b-4bf0-4fc1-92c7-7e55ec233bd4" type="TRAINS-USER-OKTA-SAPI:NOT_FOUND">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="95a667ff-6ffa-4b80-a056-86885047f508" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="1797cb2b-38eb-4847-b6aa-21f8da0b98a1" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler25" doc:id="07fdc499-f554-401b-a3fe-4c06cea7f9ca" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9cb718be-e0c9-45b3-96d4-2ea3a7d59a87" type="TRAINS-USER-OKTA-SAPI:PARSING">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="436f0924-bbab-4e7f-8a54-ee647109849e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Logger" doc:id="3f60cce8-bc0f-43b8-83db-06ea34e52d02" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler24" doc:id="8d9bed0e-e3a5-4c26-bf9d-c81ff7f4f946" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2f795593-8891-40eb-8cc6-e9590769085e" type="TRAINS-USER-OKTA-SAPI:RETRY_EXHAUSTED">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="e3d0ea3c-a35f-4879-b068-330ce7f623d3" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="24cb33f5-bf46-41c1-8bc1-1bbe0dd07b41" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler23" doc:id="9f8106c6-7b51-451c-86ec-3797e0cd3e8b" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b3c5b341-4d09-4621-b8e0-5b9f83904986" type="TRAINS-USER-OKTA-SAPI:SECURITY">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="82b2dba6-24a7-4363-8fbc-93123355bad6" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="085f93d5-698e-45df-9d34-1fc32c4ffd89" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler21" doc:id="a8249e66-4226-438d-92a4-425ec1aa7dea" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="015c038e-8c57-4669-a1df-e6ab4df85b60" type="TRAINS-USER-OKTA-SAPI:SERVICE_UNAVAILABLE">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="0ec6ef41-9006-440c-9ab3-6beac4b42b35" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="0a0cdd17-6d81-4789-80e9-bbbad9abdb00" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler19" doc:id="ff5464c7-2ab0-4044-9a11-8fa4d541a9c9" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c28fb1d0-42a6-4bc7-9c0d-7763ee7705d6" type="TRAINS-USER-OKTA-SAPI:TIMEOUT">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="b06637a1-6d7e-4a4f-be4e-443c07556a26" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="f76e37bb-615d-4936-a032-3240116e99ad" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler29" doc:id="19bc97d7-b882-4518-92f9-99607131527e" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="62c0af05-d96e-472d-931b-b89e01925ec6" type="TRAINS-USER-OKTA-SAPI:TOO_MANY_REQUESTS" >
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="6d44231f-83c9-427d-be84-09d808e712c0" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="610e3eb8-5447-4bd5-9a54-ad532f756a50" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler30" doc:id="0102fdb3-60d5-4e65-84fe-e320ebd7306d" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7257e135-336f-4874-be63-28cbefe2c283" type="TRAINS-USER-OKTA-SAPI:UNAUTHORIZED">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="ed5ea42c-7b5c-4eb1-bbc3-800bfa90bc89" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="6cd72bcf-7745-468f-b6a8-e982a65217a1" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler28" doc:id="cf5a5f01-3c80-43f0-b025-912c5c6dd365" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="115ad044-98ce-494c-b05a-dfc0b08a233b" type="TRAINS-USER-OKTA-SAPI:UNSUPPORTED_MEDIA_TYPE">
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="59750bc6-1561-47bf-bbb2-4b667cbc92a9" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Copy_of_Logger" doc:id="efb4fcbc-da7c-4426-9493-c3677030ec15" config-ref="JSON_Logger_Config" message="#[payload]" />
+		</on-error-propagate>
+	</error-handler>
 	
-	
+	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler" doc:id="495a34c8-ae23-4921-953e-2e373713fa51" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="cc51afee-bf04-4c45-a183-c295b8fd6cba" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="9fc33d0d-058a-43ec-a273-456bab637381" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Logger" doc:id="cb2a8319-2ee3-49cd-b8c3-0c93a475cc25" message="#[payload]" config-ref="JSON_Logger_Config"/>
+		</on-error-propagate>
+	</error-handler>
 </mule>
