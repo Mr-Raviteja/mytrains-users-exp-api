@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<configuration-properties doc:name="Configuration properties" doc:id="e4ce7f44-6fd3-427e-bda4-77dd903de053" file="trains.users.exp.api.dev.yaml" />
 	<configuration doc:name="Configuration" doc:id="edcb3973-b01c-442c-ab64-c5fcb4eec408" defaultErrorHandler-ref="trains-user-exp-api-globalconfiguationsError_Handler" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="99c6099b-24e2-4b5d-8b9c-73ac69f15875" applicationName="mytrains-users-eapi" environment="dev" applicationVersion="1.0.0-SNAPSHOT"/>
 	<error-handler name="trains-user-exp-api-globalconfiguationsError_Handler" doc:id="2be42713-bbed-45a6-9ae8-005188884854" >
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="14c082b1-e9c9-462a-bef8-34e5f37fd79c" >
-			<logger level="INFO" doc:name="Logger" doc:id="2f050087-edec-4dad-a957-1741b40e32df" message="#[payload]"/>
+			<ee:transform doc:name="Transform Message" doc:id="b0b21be1-b7b0-4c5a-8cce-504fd7f73e62" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	error: error.errorType,
+	errorDesc: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<json-logger:logger doc:name="Logger" doc:id="58170c79-9be0-4def-ac14-f1bf1ebc70f6" message="#[payload]" config-ref="JSON_Logger_Config"/>
 		</on-error-propagate>
 	</error-handler>
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ca1f57af-ef5c-48ff-9c57-8dce604eabed" basePath="/api" >
